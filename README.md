@@ -1,10 +1,10 @@
-## projetfinal1
+# Projet final : Labyrinthe 
 
-# étudiant 
+## étudiant 
 
 Polster Antoine 20090
 
-# bibliothèques utilisées 
+## bibliothèques utilisées 
 
 json : pour manipuler des fichierq json 
 socket : pour pouvoir discuter avec le serveur 
