@@ -6,5 +6,6 @@ Polster Antoine 20090
 
 ## bibliothèques utilisées 
 
-json : pour manipuler des fichierq json   
-socket : pour pouvoir discuter avec le serveur 
+__json__ : pour manipuler des fichierq json   
+__socket__ : pour pouvoir discuter avec le serveur  
+__opengl__ : parler de ça
