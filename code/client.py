@@ -11,14 +11,3 @@ with open('test.json') as json_data:
     request = 'identitejoueur'.encode()
 
 print(request)
-
-
-s.send(request)
-
-s.listen()
-response = s.recv() 
-
-with open(response) as json_data:
-    if json.load(json_data):
-client, addres = s.accept()
-message = client.recv(2048).decode()
