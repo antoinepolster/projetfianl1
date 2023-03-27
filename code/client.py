@@ -8,8 +8,8 @@ s.connect(serverAddress)
 
 with open('joueur.json') as json_data:
     identitejoueur = json.load(json_data)
-    request = 'identitejoueur'.encode()
+    request = identitejoueur.encode()
+    print(identitejoueur)
+
 
 s.send(request)
-
-print(request)
