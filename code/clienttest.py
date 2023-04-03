@@ -1,3 +1,7 @@
+#################
+##    test     ##
+#################
+
 import socket
 import json
 import threading
@@ -7,13 +11,13 @@ s = socket.socket()
 serverAddress = ('localhost', 3000) #adresse du serveur 
 s.connect(serverAddress)
 
-port = 8886
+port = 8884
 
 data = {
     "request": "subscribe",
     "port": port,
-    "name": "antoinepolster",
-    "matricules": ["20090", "20090"]
+    "name": "antoinepolster2",
+    "matricules": ["20091", "20091"]
  }
 
 request = json.dumps(data).encode()
