@@ -7,7 +7,7 @@ s = socket.socket()
 serverAddress = ('localhost', 3000) #adresse du serveur 
 s.connect(serverAddress)
 
-port = 8885
+port = 8888
 
 data = {
     "request": "subscribe",
@@ -15,8 +15,6 @@ data = {
     "name": "antoinepolster",
     "matricules": ["20090", "20090"]
  }
-
-#def 
 
 request = json.dumps(data).encode()
 s.send(request)
@@ -26,6 +24,12 @@ s.close()
 
 serverAddress2 = ('0.0.0.0', port) #mon adresse 
 
+def pong():
+   pong = json.dumps({'response': 'pong'}).encode()
+   client.send(pong)
+   print(message['request'])
+   print('ok') 
+
 with socket.socket() as s:
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind(serverAddress2)
@@ -34,15 +38,10 @@ with socket.socket() as s:
     while True : 
         try:
           client, serverAddres = s.accept()
-          #thread.start()
           with client:
              message = json.loads(client.recv(2048).decode())
              if message['request'] == 'ping':
-                pong = json.dumps({'response': 'pong'}).encode()
-                client.send(pong)
-                print(message['request'])
-                print(pong)
-                print('ok')
+                pong()
              else :
                 pass
         except socket.timeout:
