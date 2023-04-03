@@ -8,4 +8,3 @@ with open('state.json') as json_data:
         print('non')
 
 print( 'request' in fichierjoueur)
-print(fichierjoueur)

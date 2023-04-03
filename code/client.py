@@ -24,11 +24,17 @@ s.close()
 
 serverAddress2 = ('0.0.0.0', port) #mon adresse 
 
-def pong():
+def pong(): #pour rester connecter
    pong = json.dumps({'response': 'pong'}).encode()
    client.send(pong)
    print(message['request'])
    print('ok') 
+
+def play(): #gerer le moove à faire
+   print('message request play')
+
+def state(): #donne l'état du jeu
+   print('message state of the game')
 
 with socket.socket() as s:
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -42,6 +48,10 @@ with socket.socket() as s:
              message = json.loads(client.recv(2048).decode())
              if message['request'] == 'ping':
                 pong()
+             elif ( 'live' in message ) == True:
+                play()
+             elif ( 'players' in message) == True:
+                state()
              else :
                 pass
         except socket.timeout:

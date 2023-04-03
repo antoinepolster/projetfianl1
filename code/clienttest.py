@@ -46,6 +46,10 @@ with socket.socket() as s:
              message = json.loads(client.recv(2048).decode())
              if message['request'] == 'ping':
                 pong()
+             elif ( 'live' in message ) == True:
+                print('message request play')
+             elif ( 'players' in message) == True:
+                print('message state of the game')
              else :
                 pass
         except socket.timeout:
