@@ -14,10 +14,12 @@ __opengl__ : parler de ça
 ### lancer le serveur 
 
 ## lancer serveur 
-### pwd
-### ls
-### cd projetfinal1/code
-### ls
-### cd PI2CChampionshipRunner-main
-### ls
+si trop d'arguments : mettre " "
+* pwd
+* ls
+* cd projetfinal1/code
+* ls
+* cd PI2CChampionshipRunner-main
+* ls
 
+test 
