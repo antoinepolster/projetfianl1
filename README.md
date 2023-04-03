@@ -13,7 +13,7 @@ __opengl__ : parler de ça
 ## avancées 
 ### lancer le serveur 
 
-## lancer serveur 
+## lancer serveur
 si trop d'arguments : mettre " "
 * pwd
 * ls

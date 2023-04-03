@@ -1,6 +1,9 @@
 import socket
 import json
+<<<<<<< HEAD
 import threading
+=======
+>>>>>>> 88d8cb5f023b69d365eff3b349a84e57765fa95d
 
 s = socket.socket()
 
@@ -16,7 +19,10 @@ data = {
     "matricules": ["20090", "20090"]
  }
 
+<<<<<<< HEAD
 #def 
+=======
+>>>>>>> 88d8cb5f023b69d365eff3b349a84e57765fa95d
 
 request = json.dumps(data).encode()
 s.send(request)
@@ -34,14 +40,21 @@ with socket.socket() as s:
     while True : 
         try:
           client, serverAddres = s.accept()
+<<<<<<< HEAD
           #thread.start()
+=======
+>>>>>>> 88d8cb5f023b69d365eff3b349a84e57765fa95d
           with client:
              message = json.loads(client.recv(2048).decode())
              if message['request'] == 'ping':
                 pong = json.dumps({'response': 'pong'}).encode()
                 client.send(pong)
+<<<<<<< HEAD
                 print(message['request'])
                 print(pong)
+=======
+                print('ok')
+>>>>>>> 88d8cb5f023b69d365eff3b349a84e57765fa95d
              else :
                 pass
         except socket.timeout:
