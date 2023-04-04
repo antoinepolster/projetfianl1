@@ -1,0 +1,1 @@
+{'N': False, 'E': False, 'S': True, 'W': True, 'item': None}

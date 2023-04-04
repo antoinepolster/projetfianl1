@@ -31,18 +31,18 @@ serverAddress2 = ('0.0.0.0', port) #mon adresse
 def pong(): #pour rester connecter
    pong = json.dumps({'response': 'pong'}).encode()
    client.send(pong)
-   print(message['request'])
-   print('ok') 
 
-def play(): #gerer le moove à faire
+def play(): #reçoit une demande de mouvement
+   state = message['state']
+   freetile = str(state['tile'])
+   with open ('freetile.txt', 'w') as file : 
+      file.write(freetile)
+   board = str(state['board'])
+   with open ('currentboard', 'w') as file:
+      file.write(board)
    with open('moove.json') as json_data:
       client.send(json_data)
-   print(message)
    print('message request play')
-
-def state(): #donne l'état du jeu
-   print(message)
-   print('message state of the game')
 
 with socket.socket() as s:
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -53,13 +53,13 @@ with socket.socket() as s:
         try:
           client, serverAddres = s.accept()
           with client:
-             message = json.loads(client.recv(2048).decode())
+             message = json.loads(client.recv(4056).decode())
+             print(message)
              if message['request'] == 'ping':
                 pong()
-             elif ( 'live' in message ) == True:
+             elif ('lives' in message) == True:
+                print('play')
                 play()
-             elif ( 'players' in message) == True:
-                state()
              else :
                 pass
         except socket.timeout:

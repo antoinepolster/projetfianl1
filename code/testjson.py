@@ -6,5 +6,8 @@ with open('state.json') as json_data:
         print('ok')
     else : 
         print('non')
-
-print( 'request' in fichierjoueur)
+        freetile = str(fichierjoueur['tile'])
+        with open ('freetile.txt', 'w') as file : 
+            file.write(freetile)
+            
+#print( 'request' in fichierjoueur)

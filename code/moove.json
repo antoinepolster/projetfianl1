@@ -1,0 +1,11 @@
+{
+    "tile": {
+        "N": true,
+        "E": false,
+        "S": true,
+        "W": true,
+        "item": 1
+      },
+    "gate": "A",
+    "new_position": 45
+}
