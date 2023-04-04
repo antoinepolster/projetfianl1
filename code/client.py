@@ -31,9 +31,13 @@ def pong(): #pour rester connecter
    print('ok') 
 
 def play(): #gerer le moove à faire
+   with open('moove.json') as json_data:
+      client.send(json_data)
+   print(message)
    print('message request play')
 
 def state(): #donne l'état du jeu
+   print(message)
    print('message state of the game')
 
 with socket.socket() as s:
