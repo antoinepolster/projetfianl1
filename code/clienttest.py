@@ -11,13 +11,13 @@ s = socket.socket()
 serverAddress = ('localhost', 3000) #adresse du serveur 
 s.connect(serverAddress)
 
-port = 8884
+port = 8886
 
 data = {
     "request": "subscribe",
     "port": port,
-    "name": "antoinepolster2",
-    "matricules": ["20091", "20091"]
+    "name": "antoinepolster",
+    "matricules": ["20090", "20090"]
  }
 
 request = json.dumps(data).encode()
@@ -28,11 +28,21 @@ s.close()
 
 serverAddress2 = ('0.0.0.0', port) #mon adresse 
 
-def pong():
+def pong(): #pour rester connecter
    pong = json.dumps({'response': 'pong'}).encode()
    client.send(pong)
    print(message['request'])
    print('ok') 
+
+def play(): #gerer le moove à faire
+   with open('moove.json') as json_data:
+      client.send(json_data)
+   print(message)
+   print('message request play')
+
+def state(): #donne l'état du jeu
+   print(message)
+   print('message state of the game')
 
 with socket.socket() as s:
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -47,9 +57,9 @@ with socket.socket() as s:
              if message['request'] == 'ping':
                 pong()
              elif ( 'live' in message ) == True:
-                print('message request play')
+                play()
              elif ( 'players' in message) == True:
-                print('message state of the game')
+                state()
              else :
                 pass
         except socket.timeout:
