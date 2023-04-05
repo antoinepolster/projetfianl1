@@ -6,7 +6,7 @@ s = socket.socket()
 serverAddress = ('localhost', 3000) #adresse du serveur 
 s.connect(serverAddress)
 
-port = 8888
+port = 8882
 
 data = {
     "request": "subscribe",
@@ -29,15 +29,36 @@ def pong(): #pour rester connecter
 
 def play(): #reçoit une demande de mouvement
    state = message['state']
-   freetile = str(state['tile'])
-   with open ('freetile.txt', 'w') as file : 
+
+   freetile = str(state['tile'])  
+   with open ('freetile.txt', 'w') as file: 
       file.write(freetile)
+
    board = str(state['board'])
-   with open ('currentboard', 'w') as file:
+   with open ('currentboard.txt', 'w') as file:
       file.write(board)
-   with open('moove.json') as json_data:
-      client.send(json_data)
-   print('message request play')
+
+   target = str(state['target'])
+   with open ('target.txt', 'w') as file:
+      file.write(target)
+
+   remaining = str(state['remaining'])
+   with open ('remaining.txt', 'w') as file:
+      file.write(remaining)
+
+   positions = str(state['positions'])
+   with open ('position.txt', 'w') as file:
+      file.write(positions)
+
+   with open('freetile.txt') as file:
+      tile = file.read()
+      moove = {
+    "tile": tile,
+    "gate": "A",
+    "new_position": 45
+      }
+      envoie = (json.dumps(moove)).encode()
+      s.send(envoie)
 
 with socket.socket() as s:
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -48,7 +69,7 @@ with socket.socket() as s:
         try:
           client, serverAddres = s.accept()
           with client:
-             message = json.loads(client.recv(4056).decode())
+             message = json.loads(client.recv(8112).decode())
              print(message)
              if message['request'] == 'ping':
                 pong()

@@ -11,7 +11,7 @@ s = socket.socket()
 serverAddress = ('localhost', 3000) #adresse du serveur 
 s.connect(serverAddress)
 
-port = 8884
+port = 8880
 
 data = {
     "request": "subscribe",
