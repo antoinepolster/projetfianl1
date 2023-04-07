@@ -1,2 +1,6 @@
-import threading 
+from datetime import datetime
+
+a = datetime.now()
+
+print(a)
 
