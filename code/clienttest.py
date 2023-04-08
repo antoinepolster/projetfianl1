@@ -71,12 +71,12 @@ with socket.socket() as s:
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind(serverAddress2)
     s.listen()
-    s.settimeout(1)
+    s.settimeout(500)
     while True : 
         try:
           client, serverAddres = s.accept()
           with client:
-             message = json.loads(client.recv(8112).decode())
+             message = json.loads(client.recv(16224).decode())
              print(message)
              if message['request'] == 'ping':
                 print('ping ####### ' + time + ' #######')

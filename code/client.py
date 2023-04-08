@@ -2,7 +2,6 @@ import socket
 import json
 from datetime import datetime
 import threading
-import time
 
 s = socket.socket()
 
@@ -30,11 +29,12 @@ serverAddress2 = ('0.0.0.0', port) #mon adresse
 
 def pong(): #pour rester connecter
    pong = json.dumps({'response': 'pong'}).encode()
+   print(pong)
    client.send(pong)
 
 thread = threading.Thread(target=pong, daemon=True)
 
-def play(): #reçoit une demande de mouvement
+def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédefini
    state = message['state']
 
    freetile = str(state['tile'])  
@@ -67,23 +67,25 @@ def play(): #reçoit une demande de mouvement
       envoie = (json.dumps(moove)).encode()
       s.send(envoie)
 
+thread.start()
 with socket.socket() as s:
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind(serverAddress2)
     s.listen()
-    s.settimeout(1)
+    s.settimeout(500)
     while True : 
         try:
           client, serverAddres = s.accept()
           with client:
-             message = json.loads(client.recv(8112).decode())
-             print(message)
+             message = json.loads(client.recv(16224).decode())
+             print('#__message__start#' + '\n' + str(message) + '\n' + '#__message__end#' + '\n')
              if message['request'] == 'ping':
-                print('ping ####### ' + time + ' #######')
+                print('ping at ####### ' + time + ' #######')
                 pong()
              elif ('lives' in message) == True:
-                play()
+                sendplay()
              else :
                 pass
         except socket.timeout:
            pass
+
