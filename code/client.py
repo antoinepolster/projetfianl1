@@ -8,7 +8,7 @@ s = socket.socket()
 serverAddress = ('localhost', 3000) #adresse du serveur 
 s.connect(serverAddress)
 
-port = 8888
+port = 8886
 
 time = str(datetime.now())
 
@@ -29,17 +29,17 @@ serverAddress2 = ('0.0.0.0', port) #mon adresse
 
 def pong(): #pour rester connecter
    pong = json.dumps({'response': 'pong'}).encode()
-   print(pong)
+   print(str(pong) + 'at ' + str(time))
    client.send(pong)
 
-thread = threading.Thread(target=pong, daemon=True)
+#thread = threading.Thread(target=pong, daemon=True)
 
 def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédefini
    state = message['state']
-
-   freetile = str(state['tile'])  
-   with open ('freetile.txt', 'w') as file: 
-      file.write(freetile)
+   print(state)
+   freetile = (state['tile'])  
+   #with open ('freetile.json', 'w') as file: 
+      #file.write(freetile)
 
    board = str(state['board'])
    with open ('currentboard.txt', 'w') as file:
@@ -59,15 +59,24 @@ def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédef
 
    with open('freetile.txt') as file:
       tile = file.read()
-      moove = {
-    "tile": tile,
-    "gate": "A",
-    "new_position": 45
-      }
-      envoie = (json.dumps(moove)).encode()
-      s.send(envoie)
 
-thread.start()
+      move = {
+   "tile": freetile,
+   "gate": "H",
+   "new_position": 45
+      }
+
+      play = {
+   "response": "move",
+   "move": move,
+   "message": "antoine 1"
+      }
+
+      envoie = json.dumps(play).encode()
+      client.send(envoie)
+      print('envoie : ' + str(envoie))
+      print('tile' + str(tile))
+
 with socket.socket() as s:
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind(serverAddress2)
@@ -75,17 +84,17 @@ with socket.socket() as s:
     s.settimeout(500)
     while True : 
         try:
-          client, serverAddres = s.accept()
+          client, serverAddress = s.accept()
           with client:
              message = json.loads(client.recv(16224).decode())
              print('#__message__start#' + '\n' + str(message) + '\n' + '#__message__end#' + '\n')
              if message['request'] == 'ping':
-                print('ping at ####### ' + time + ' #######')
+                #print('ping at ####### ' + time + ' #######')
                 pong()
              elif ('lives' in message) == True:
                 sendplay()
              else :
                 pass
-        except socket.timeout:
-           pass
-
+        except OSError :
+             print('Serveur introuvable, connexion impossible.')
+#         pass

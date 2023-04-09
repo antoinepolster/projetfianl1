@@ -2,7 +2,6 @@ import socket
 import json
 from datetime import datetime
 import threading
-import time
 
 s = socket.socket()
 
@@ -30,42 +29,53 @@ serverAddress2 = ('0.0.0.0', port) #mon adresse
 
 def pong(): #pour rester connecter
    pong = json.dumps({'response': 'pong'}).encode()
+   print(str(pong) + 'at ' + str(time))
    client.send(pong)
 
-thread = threading.Thread(target=pong, daemon=True)
+#thread = threading.Thread(target=pong, daemon=True)
 
-def play(): #reçoit une demande de mouvement
+def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédefini
    state = message['state']
-
-   freetile = str(state['tile'])  
-   with open ('freetile2.txt', 'w') as file: 
-      file.write(freetile)
+   print(state)
+   freetile = (state['tile'])  
+   #with open ('freetile.json', 'w') as file: 
+      #file.write(freetile)
 
    board = str(state['board'])
-   with open ('currentboard2.txt', 'w') as file:
+   with open ('currentboard.txt', 'w') as file:
       file.write(board)
 
    target = str(state['target'])
-   with open ('target2.txt', 'w') as file:
+   with open ('target.txt', 'w') as file:
       file.write(target)
 
    remaining = str(state['remaining'])
-   with open ('remaining2.txt', 'w') as file:
+   with open ('remaining.txt', 'w') as file:
       file.write(remaining)
 
    positions = str(state['positions'])
-   with open ('position2.txt', 'w') as file:
+   with open ('position.txt', 'w') as file:
       file.write(positions)
 
-   with open('freetile2.txt') as file:
+   with open('freetile.txt') as file:
       tile = file.read()
-      moove = {
-    "tile": tile,
-    "gate": "A",
-    "new_position": 45
+
+      move = {
+   "tile": freetile,
+   "gate": "H",
+   "new_position": 45
       }
-      envoie = (json.dumps(moove)).encode()
-      s.send(envoie)
+
+      play = {
+   "response": "move",
+   "move": move,
+   "message": "antoine 1"
+      }
+
+      envoie = json.dumps(play).encode()
+      client.send(envoie)
+      print('envoie : ' + str(envoie))
+      print('tile' + str(tile))
 
 with socket.socket() as s:
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -74,16 +84,17 @@ with socket.socket() as s:
     s.settimeout(500)
     while True : 
         try:
-          client, serverAddres = s.accept()
+          client, serverAddress = s.accept()
           with client:
              message = json.loads(client.recv(16224).decode())
-             print(message)
+             print('#__message__start#' + '\n' + str(message) + '\n' + '#__message__end#' + '\n')
              if message['request'] == 'ping':
-                print('ping ####### ' + time + ' #######')
+                #print('ping at ####### ' + time + ' #######')
                 pong()
              elif ('lives' in message) == True:
-                play()
+                sendplay()
              else :
                 pass
-        except socket.timeout:
-           pass
+        except OSError :
+             print('Serveur introuvable, connexion impossible.')
+#         pass
