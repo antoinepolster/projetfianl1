@@ -8,7 +8,7 @@ s = socket.socket()
 serverAddress = ('localhost', 3000) #adresse du serveur 
 s.connect(serverAddress)
 
-port = 8886
+port = 8880
 
 time = str(datetime.now())
 
@@ -29,14 +29,14 @@ serverAddress2 = ('0.0.0.0', port) #mon adresse
 
 def pong(): #pour rester connecter
    pong = json.dumps({'response': 'pong'}).encode()
-   print(str(pong) + 'at ' + str(time))
+   #print(str(pong) + 'at ' + str(time))
    client.send(pong)
 
 #thread = threading.Thread(target=pong, daemon=True)
 
 def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédefini
    state = message['state']
-   print(state)
+   #print(state)
    freetile = (state['tile'])  
    #with open ('freetile.json', 'w') as file: 
       #file.write(freetile)
@@ -74,8 +74,11 @@ def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédef
 
       envoie = json.dumps(play).encode()
       client.send(envoie)
-      print('envoie : ' + str(envoie))
-      print('tile' + str(tile))
+      print('#__message__start__target__ at__' + time + '#' + '\n' + str(target) + '\n' + '#__message__end__target#' + '\n')
+      print('#__message__start__position__ at__' + time + '#' + '\n' + str(positions) + '\n' + '#__message__end__posistion#' + '\n')
+      print('#__message__start__board__ at__' + time + '#' + '\n' + str(board) + '\n' + '#__message__end__board#' + '\n')
+      #print('envoie : ' + str(envoie))
+      #print('tile' + str(tile))
 
 with socket.socket() as s:
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -87,7 +90,7 @@ with socket.socket() as s:
           client, serverAddress = s.accept()
           with client:
              message = json.loads(client.recv(16224).decode())
-             print('#__message__start#' + '\n' + str(message) + '\n' + '#__message__end#' + '\n')
+             #print('#__message__start#' + '\n' + str(message) + '\n' + '#__message__end#' + '\n')
              if message['request'] == 'ping':
                 #print('ping at ####### ' + time + ' #######')
                 pong()
@@ -97,4 +100,3 @@ with socket.socket() as s:
                 pass
         except OSError :
              print('Serveur introuvable, connexion impossible.')
-#         pass
