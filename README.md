@@ -1,4 +1,4 @@
-# Projet final : Labyrinthe 
+# Projet final PI2C : Labyrinthe 
 
 ## étudiant 
 
@@ -8,12 +8,10 @@ Polster Antoine 20090
 
 __json__ : pour manipuler des fichierq json   
 __socket__ : pour pouvoir discuter avec le serveur  
-__opengl__ : parler de ça
+__datetime__ : juste avoir une indication du temps
+__copy__ : permettre de faire la copie d'un objet 
 
-## avancées 
-### lancer le serveur 
-
-## lancer serveur
+## lancer serveur : note à moi même 
 si trop d'arguments : mettre " "
 * pwd
 * ls
@@ -27,3 +25,10 @@ Mon client ouvre un premier scket qu'il utilise pour se connecter au serveur. Un
 Il en ouvre donc un nouveau pour écouter et envoyer des messages sur le port qu'il a spécifié lors de la connexion.
 
 Pour ce qui est de la discussion avec le serveur : mon client reçoit tout les messages qu'importe le contenue et les traites en fonction des clefs du dictionnaire. Chaque message est alors envoyé vers la fonction qui lui correspond.
+
+## stratégie pour trouver un chemin
+* récuperer la freetile et la faire pivoter dans le 4 sens possibles
+* pour chaque sens, l'insérer dans le current board et récuper le new board
+* essayer de trouver un chemin entre le notre position et la target à l'aide de BFS
+* * dés qu'on trouve un chemin : s'arrèter 
+* * si on ne trouve pas de chemin on essaie en boucle 
