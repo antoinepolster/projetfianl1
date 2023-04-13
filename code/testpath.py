@@ -80,7 +80,5 @@ def try_gates(board): #genere les 48 nouveaux boards (en 3/100 de sec)
       c = str(liste) + time2
       file.write(c)
 
-def find_a_path(start, target, new_board):
-
-
 try_gates(board)
+
