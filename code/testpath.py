@@ -1,5 +1,5 @@
 import copy #permet de faire une copie d'un objet
-import random
+from datetime import datetime
 
 #       A     B     C
 #    0  1  2  3  4  5  6
@@ -10,6 +10,8 @@ import random
 # J 35 36 37 38 39 40 41 F
 #   42 43 44 45 46 47 48
 #       I     H     G
+
+time = str(datetime.now())
 
 GATES = {
     "A": {"start": 1, "end": 43, "inc": 7},
@@ -26,12 +28,11 @@ GATES = {
     "L": {"start": 7, "end": 13, "inc": 1},
 }
 
-def slideTiles(board, free, gate): #prend la freetile et l'injecte dans une gate (ici A)
+def slideTiles(board, free, gate): #prend la freetile et l'injecte dans une gate (ici A) on s'en fout de la new_free_tile
     start = GATES[gate]["start"]
     end = GATES[gate]["end"]
     inc = GATES[gate]["inc"]
 
-    new_free = board[end]
     new_board = copy.deepcopy(board)
     dest = end
     src = end - inc
@@ -40,7 +41,7 @@ def slideTiles(board, free, gate): #prend la freetile et l'injecte dans une gate
         dest = src
         src -= inc
     new_board[start] = free
-    return print(new_board), print(new_free)
+    return new_board #,print(str(new_board) + '__' + time)
 
 def turn_tile(tile): #tourne la freetile de 90° vers le gauche mais n'intervient pas sur l'item
     res = copy.deepcopy(tile)
@@ -66,6 +67,20 @@ def turn4(tile): #tourne la freetile dans les 4 sens diff
         i += 1 
         a.append(b)
         old_b = copy.deepcopy(b)
-    print(a)
+    return a 
 
-turn4(free)
+def try_gates(board):
+    liste = []
+    a = turn4(free) 
+    for elem in a:
+        #print(elem)
+        for gate in GATES:
+            print(gate)
+            b = slideTiles(board, elem, gate)
+            liste.append(b)
+    with open ('all_board.txt', 'w') as file:
+      c = str(liste)
+      file.write(c)
+
+try_gates(board)
+#slideTiles(board, free, gate)
