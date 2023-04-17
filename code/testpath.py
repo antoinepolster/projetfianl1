@@ -2,20 +2,59 @@ import copy
 from datetime import datetime
 from collections import deque
 
-#       A     B     C
-#    0  1  2  3  4  5  6
-# L  7  8  9 10 11 12 13 D
-#   14 15 16 17 18 19 20
-# K 21 22 23 24 25 26 27 E
-#   28 29 30 31 32 33 34
-# J 35 36 37 38 39 40 41 F
-#   42 43 44 45 46 47 48
-#       I     H     G
-
-time = str(datetime.now())
+time0 = str(datetime.now())
+print(str(time0) + '_start')
 
 board = [
-            {'N': False, 'E': True, 'S': True, 'W': False, 'item': None}, {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, {'N': False, 'E': True, 'S': True, 'W': True, 'item': 0}, {'N': True, 'E': True, 'S': True, 'W': False, 'item': 23}, {'N': False, 'E': True, 'S': True, 'W': True, 'item': 1}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, {'N': False, 'E': False, 'S': True, 'W': True, 'item': None}, {'N': False, 'E': False, 'S': True, 'W': True, 'item': 15}, {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, {'N': False, 'E': True, 'S': True, 'W': False, 'item': 14}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': True, 'S': True, 'W': False, 'item': 2}, {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': True, 'S': True, 'W': False, 'item': 3}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': False, 'E': True, 'S': True, 'W': True, 'item': 4}, {'N': False, 'E': True, 'S': True, 'W': True, 'item': 23}, {'N': True, 'E': False, 'S': True, 'W': True, 'item': 5}, {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, {'N': False, 'E': True, 'S': True, 'W': True, 'item': 22}, {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, {'N': False, 'E': False, 'S': True, 'W': True, 'item': None}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': 17}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': True, 'S': True, 'W': False, 'item': 6}, {'N': True, 'E': True, 'S': False, 'W': False, 'item': 16}, {'N': True, 'E': True, 'S': False, 'W': True, 'item': 7}, {'N': True, 'E': False, 'S': True, 'W': True, 'item': 19}, {'N': True, 'E': False, 'S': True, 'W': True, 'item': 8}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': False, 'S': True, 'W': True, 'item': 9}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': True, 'S': True, 'W': False, 'item': 21}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': True, 'S': False, 'W': False, 'item': 12}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, {'N': False, 'E': False, 'S': True, 'W': True, 'item': None}, {'N': True, 'E': True, 'S': False, 'W': True, 'item': 20}, {'N': True, 'E': True, 'S': False, 'W': False, 'item': None}, {'N': False, 'E': True, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': True, 'S': False, 'W': True, 'item': 10}, {'N': True, 'E': True, 'S': False, 'W': False, 'item': None}, {'N': True, 'E': True, 'S': False, 'W': True, 'item': 11}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None},
+            {'N': False, 'E': True, 'S': True, 'W': False, 'item': None}, 
+            {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, 
+            {'N': False, 'E': True, 'S': True, 'W': True, 'item': 0}, 
+            {'N': True, 'E': True, 'S': True, 'W': False, 'item': 23}, 
+            {'N': False, 'E': True, 'S': True, 'W': True, 'item': 1}, 
+            {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, 
+            {'N': False, 'E': False, 'S': True, 'W': True, 'item': None}, 
+            {'N': False, 'E': False, 'S': True, 'W': True, 'item': 15}, 
+            {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, 
+            {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, 
+            {'N': False, 'E': True, 'S': True, 'W': False, 'item': 14}, 
+            {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, 
+            {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, 
+            {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, 
+            {'N': True, 'E': True, 'S': True, 'W': False, 'item': 2}, 
+            {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, 
+            {'N': True, 'E': True, 'S': True, 'W': False, 'item': 3}, 
+            {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, 
+            {'N': False, 'E': True, 'S': True, 'W': True, 'item': 4}, 
+            {'N': False, 'E': True, 'S': True, 'W': True, 'item': 23},
+            {'N': True, 'E': False, 'S': True, 'W': True, 'item': 5}, 
+            {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, 
+            {'N': False, 'E': True, 'S': True, 'W': True, 'item': 22}, 
+            {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, 
+            {'N': False, 'E': False, 'S': True, 'W': True, 'item': None}, 
+            {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, 
+            {'N': True, 'E': False, 'S': False, 'W': True, 'item': 17}, 
+            {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, 
+            {'N': True, 'E': True, 'S': True, 'W': False, 'item': 6}, 
+            {'N': True, 'E': True, 'S': False, 'W': False, 'item': 16}, 
+            {'N': True, 'E': True, 'S': False, 'W': True, 'item': 7}, 
+            {'N': True, 'E': False, 'S': True, 'W': True, 'item': 19}, 
+            {'N': True, 'E': False, 'S': True, 'W': True, 'item': 8}, 
+            {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, 
+            {'N': True, 'E': False, 'S': True, 'W': True, 'item': 9}, 
+            {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, 
+            {'N': True, 'E': True, 'S': True, 'W': False, 'item': 21}, 
+            {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, 
+            {'N': True, 'E': True, 'S': False, 'W': False, 'item': 12}, 
+            {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, 
+            {'N': False, 'E': False, 'S': True, 'W': True, 'item': None}, 
+            {'N': True, 'E': True, 'S': False, 'W': True, 'item': 20}, 
+            {'N': True, 'E': True, 'S': False, 'W': False, 'item': None}, 
+            {'N': False, 'E': True, 'S': True, 'W': False, 'item': None}, 
+            {'N': True, 'E': True, 'S': False, 'W': True, 'item': 10}, 
+            {'N': True, 'E': True, 'S': False, 'W': False, 'item': None}, 
+            {'N': True, 'E': True, 'S': False, 'W': True, 'item': 11}, 
+            {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, 
+            {'N': True, 'E': False, 'S': False, 'W': True, 'item': None},
         ]
 free = {'N': True, 'E': True, 'S': True, 'W': False, 'item': 23}
 
@@ -47,7 +86,7 @@ def slideTiles(board, free, gate): #prend la freetile et l'injecte dans une gate
         dest = src
         src -= inc
     new_board[start] = free
-    return new_board #,print(str(new_board) + '__' + time)
+    return new_board
 
 def turn_tile(tile): #tourne la freetile de 90° vers le gauche mais n'intervient pas sur l'item
     res = copy.deepcopy(tile)
@@ -128,25 +167,32 @@ def path(start, end, board):
 
     try:
         res = BFS(start, successors, [end])
-        print(str(res) + '_res')
+        print(res)
         return res
     except IndexError:
         return None
 
-def try_gates(board): #genere les 48 nouveaux boards (en 3/100 de sec)
-    liste = [time]
+def try_gates(board):
     a = turn4(free)
     i = 0
     for elem in a:
         for gate in GATES:
             b = slideTiles(board, elem, gate)
             i += 1 
-            d = path(27, 35, b)
+            d = path(0, 48, b)
             if d != None:
                 print('there is a path')
+                print(i)
                 return d
-            else : 
-                print(str(d) + str(i))
 
+def there_is_a_path(board):
+    if try_gates(board) != None: 
+        print('yes')
+        time = str(datetime.now())
+        print(time)
+    else :
+        print('no')
+        time1 = str(datetime.now())
+        print(str(time1) +'_end')
 
-try_gates(board)
+there_is_a_path(board)

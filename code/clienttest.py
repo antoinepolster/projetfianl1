@@ -34,12 +34,13 @@ s = socket.socket()
 serverAddress = ('localhost', 3000) #adresse du serveur 
 s.connect(serverAddress)
 
-port = 8882
+port = 8884
+name = "clienttest"
 
 data = {
     "request": "subscribe",
     "port": port,
-    "name": "antoinepolster2",
+    "name": name,
     "matricules": ["200901", "200901"]
  }
 
@@ -92,44 +93,60 @@ def turn4(tile): #tourne la freetile dans les 3 sens diff + ajoute la freetile
         old_b = copy.deepcopy(b)
     return a, #print(str(a) + '_turn4')
 
+def wich_player(state):
+    players = state['players']
+    if players[0] == name:
+        return True
+    else : 
+        return False
+
 def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédefini
-   state = message['state']
-   freetile = state['tile']
-   print(str(freetile) + '_freetile')
-   board = state['board']
-   target = state['target']
-   remaining = state['remaining']
-   positions = state['positions']
+    state = message['state']
+    target = state['target']
+    freetile = state['tile']
+    board = state['board']
+    remainings = state['remaining']
+    positions = state['positions']
+    a = wich_player(state)
+    print(str(a) + '_player')
+    print(positions)
+    print(remainings)
 
-   def try_gates(board): #genere les 48 nouveaux boards (en environ 3/100 de sec)
-    time = str(datetime.now())
-    liste = [time]
-    a = turn4(freetile) 
-    for elem in a:
-        for gate in GATES:
-            b = slideTiles(board, elem, gate)
-            liste.append(b)
-    with open ('all_boardstest.txt', 'w') as file:
-      time2 = str(datetime.now())
-      c = str(liste) + time2
-      file.write(c)
+    if a == True:
+        position_player = positions[0]
+        remaining_player = remainings[0]
+    else : 
+        position_player = positions[1]
+        remaining_player = remainings[1]
 
-   try_gates(board)
+    print(position_player)
+    print(remaining_player)
 
-   move = {
+    def try_gates(board): #genere les 48 nouveaux boards (en environ 3/100 de sec)
+        time = str(datetime.now())
+        liste = [time]
+        a = turn4(freetile) 
+        for elem in a:
+            for gate in GATES:
+                b = slideTiles(board, elem, gate)
+                liste.append(b)
+
+    try_gates(board)
+
+    move = {
    "tile": freetile,
    "gate": "H",
    "new_position": 45
       }
 
-   play = {
+    play = {
    "response": "move",
    "move": move,
    "message": "antoine 1"
       }
 
-   envoie = json.dumps(play).encode() 
-   client.send(envoie) #pour l'instant il envoie encore un move prédéfini
+    envoie = json.dumps(play).encode() 
+    client.send(envoie) #pour l'instant il envoie encore un move prédéfini
    #print('#__message__start__target__ at__' + time + '#' + '\n' + str(target) + '\n' + '#__message__end__target#' + '\n')
    #print('#__message__start__position__ at__' + time + '#' + '\n' + str(positions) + '\n' + '#__message__end__posistion#' + '\n')
    #print('#__message__start__board__ at__' + time + '#' + '\n' + str(board) + '\n' + '#__message__end__board#' + '\n')
@@ -144,9 +161,7 @@ with socket.socket() as s:
           client, serverAddress = s.accept()
           with client:
              message = json.loads(client.recv(16224).decode())
-             #print('#__message__start#' + '\n' + str(message) + '\n' + '#__message__end#' + '\n')
              if message['request'] == 'ping':
-                #print('ping at ####### ' + time + ' #######')
                 pong()
              elif ('lives' in message) == True:
                 sendplay()

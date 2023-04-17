@@ -36,11 +36,12 @@ serverAddress = ('localhost', 3000) #adresse du serveur
 s.connect(serverAddress)
 
 port = 8882
+name = "test path"
 
 data = {
     "request": "subscribe",
     "port": port,
-    "name": "test path",
+    "name": name,
     "matricules": ["200902", "200902"]
  }
 
@@ -69,7 +70,7 @@ def slideTiles(board, free, gate):
         dest = src
         src -= inc
     new_board[start] = free
-    return new_board #,print(str(new_board) + '__' + time)
+    return new_board
 
 def turn_tile(tile): #tourne la freetile de 90°
     res = copy.deepcopy(tile)
@@ -91,7 +92,7 @@ def turn4(tile): #tourne la freetile dans les 3 sens diff + ajoute la freetile
         i += 1 
         a.append(b)
         old_b = copy.deepcopy(b)
-    return a, #print(str(a) + '_turn4')
+    return a
 
 #début du l'ajout
 def add(A, B):
@@ -157,17 +158,22 @@ def path(start, end, board):
         return None
 #fin de l'ajout 
 
+def wich_player(state):
+    players = state['players']
+    if players[0] == name:
+        return True
+    else : 
+        return False
+
 def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédefini
    state = message['state']
    freetile = state['tile']
    board = state['board']
    target = state['target']
-   #target = 10
-   print(target)
-   remaining = state['remaining']
+   remaining = state['remaining'] # quelle importance ? 
    positions = state['positions']
-   #positions = 0
-   print(positions)
+   a = wich_player(state) 
+   print(str(a) + '_player')
 
    def try_gates(board): #genere les 48 nouveaux boards (en environ 3/100 de sec)
     a = turn4(freetile)
@@ -216,13 +222,11 @@ with socket.socket() as s:
           client, serverAddress = s.accept()
           with client:
              message = json.loads(client.recv(16224).decode())
-             #print('#__message__start#' + '\n' + str(message) + '\n' + '#__message__end#' + '\n')
              if message['request'] == 'ping':
-                #print('ping at ####### ' + time + ' #######')
                 pong()
-             elif ('lives' in message) == True:
+             elif message['request'] == 'play':
                 sendplay()
              else :
-                pass
+                print(message)
         except OSError :
              print('Serveur introuvable, connexion impossible.')
