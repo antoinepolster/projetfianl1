@@ -1,5 +1,6 @@
 import copy 
 from datetime import datetime
+from collections import deque
 
 #       A     B     C
 #    0  1  2  3  4  5  6
@@ -13,7 +14,9 @@ from datetime import datetime
 
 time = str(datetime.now())
 
-board = [{'N': False, 'E': True, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, {'N': False, 'E': True, 'S': True, 'W': True, 'item': 0}, {'N': False, 'E': False, 'S': True, 'W': True, 'item': 17}, {'N': False, 'E': True, 'S': True, 'W': True, 'item': 1}, {'N': True, 'E': True, 'S': True, 'W': False, 'item': 22}, {'N': False, 'E': False, 'S': True, 'W': True, 'item': None}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': False, 'E': False, 'S': True, 'W': True, 'item': None}, {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': False, 'S': True, 'W': True, 'item': 21}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': 13}, {'N': False, 'E': True, 'S': True, 'W': False, 'item': 15}, {'N': True, 'E': True, 'S': True, 'W': False, 'item': 2}, {'N': True, 'E': True, 'S': False, 'W': False, 'item': None}, {'N': True, 'E': True, 'S': True, 'W': False, 'item': 3}, {'N': False, 'E': True, 'S': True, 'W': False, 'item': 12}, {'N': False, 'E': True, 'S': True, 'W': True, 'item': 4}, {'N': False, 'E': True, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': False, 'S': True, 'W': True, 'item': 5}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': False, 'E': True, 'S': True, 'W': True, 'item': 20}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': True, 'S': False, 'W': False, 'item': 16}, {'N': True, 'E': True, 'S': True, 'W': False, 'item': 6}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': True, 'S': False, 'W': True, 'item': 7}, {'N': False, 'E': True, 'S': True, 'W': False, 'item': 14}, {'N': True, 'E': False, 'S': True, 'W': True, 'item': 8}, {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': False, 'S': True, 'W': True, 'item': 9}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': False, 'E': True, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': True, 'S': False, 'W': True, 'item': 18}, {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, {'N': False, 'E': True, 'S': True, 'W': False, 'item': None}, {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': True, 'S': False, 'W': False, 'item': None}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': True, 'S': False, 'W': True, 'item': 10}, {'N': False, 'E': True, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': True, 'S': False, 'W': True, 'item': 11}, {'N': True, 'E': True, 'S': False, 'W': True, 'item': 19}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}] 
+board = [
+            {'N': False, 'E': True, 'S': True, 'W': False, 'item': None}, {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, {'N': False, 'E': True, 'S': True, 'W': True, 'item': 0}, {'N': True, 'E': True, 'S': True, 'W': False, 'item': 23}, {'N': False, 'E': True, 'S': True, 'W': True, 'item': 1}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, {'N': False, 'E': False, 'S': True, 'W': True, 'item': None}, {'N': False, 'E': False, 'S': True, 'W': True, 'item': 15}, {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, {'N': False, 'E': True, 'S': True, 'W': False, 'item': 14}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': True, 'S': True, 'W': False, 'item': 2}, {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': True, 'S': True, 'W': False, 'item': 3}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': False, 'E': True, 'S': True, 'W': True, 'item': 4}, {'N': False, 'E': True, 'S': True, 'W': True, 'item': 23}, {'N': True, 'E': False, 'S': True, 'W': True, 'item': 5}, {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, {'N': False, 'E': True, 'S': True, 'W': True, 'item': 22}, {'N': False, 'E': True, 'S': False, 'W': True, 'item': None}, {'N': False, 'E': False, 'S': True, 'W': True, 'item': None}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': 17}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': True, 'S': True, 'W': False, 'item': 6}, {'N': True, 'E': True, 'S': False, 'W': False, 'item': 16}, {'N': True, 'E': True, 'S': False, 'W': True, 'item': 7}, {'N': True, 'E': False, 'S': True, 'W': True, 'item': 19}, {'N': True, 'E': False, 'S': True, 'W': True, 'item': 8}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': False, 'S': True, 'W': True, 'item': 9}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, {'N': True, 'E': True, 'S': True, 'W': False, 'item': 21}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': True, 'S': False, 'W': False, 'item': 12}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None}, {'N': False, 'E': False, 'S': True, 'W': True, 'item': None}, {'N': True, 'E': True, 'S': False, 'W': True, 'item': 20}, {'N': True, 'E': True, 'S': False, 'W': False, 'item': None}, {'N': False, 'E': True, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': True, 'S': False, 'W': True, 'item': 10}, {'N': True, 'E': True, 'S': False, 'W': False, 'item': None}, {'N': True, 'E': True, 'S': False, 'W': True, 'item': 11}, {'N': True, 'E': False, 'S': True, 'W': False, 'item': None}, {'N': True, 'E': False, 'S': False, 'W': True, 'item': None},
+        ]
 free = {'N': True, 'E': True, 'S': True, 'W': False, 'item': 23}
 
 GATES = {
@@ -68,17 +71,82 @@ def turn4(tile): #tourne la freetile dans les 4 sens diff
         old_b = copy.deepcopy(b)
     return a 
 
+def add(A, B):
+    return tuple(a + b for a, b in zip(A, B))
+
+def index2coords(index):
+    return index // 7, index % 7
+
+DIRECTIONS = {
+    "N": {"coords": (-1, 0), "inc": -7, "opposite": "S"},
+    "S": {"coords": (1, 0), "inc": 7, "opposite": "N"},
+    "W": {"coords": (0, -1), "inc": -1, "opposite": "E"},
+    "E": {"coords": (0, 1), "inc": 1, "opposite": "W"},
+    (-1, 0): {"name": "N"},
+    (1, 0): {"name": "S"},
+    (0, -1): {"name": "W"},
+    (0, 1): {"name": "E"},
+}
+
+def isCoordsValid(i, j):
+    return i >= 0 and i < 7 and j >= 0 and i < 7
+
+def coords2index(i, j):
+    return i * 7 + j
+
+def BFS(start, successors, goals):
+    q = deque()
+    parent = {}
+    parent[start] = None
+    node = start
+    while node not in goals:
+        for successor in successors(node):
+            if successor not in parent:
+                parent[successor] = node
+                q.append(successor)
+        node = q.popleft()
+
+    res = []
+    while node is not None:
+        res.append(node)
+        node = parent[node]
+
+    return list(reversed(res))
+
+def path(start, end, board):
+    def successors(index):
+        res = []
+        for dir in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            coords = add(index2coords(index), dir)
+            dirName = DIRECTIONS[dir]["name"]
+            opposite = DIRECTIONS[dirName]["opposite"]
+            # breakpoint()
+            if isCoordsValid(*coords):
+                if board[index][dirName] and board[coords2index(*coords)][opposite]:
+                    res.append(coords2index(*coords))
+        return res
+
+    try:
+        res = BFS(start, successors, [end])
+        print(str(res) + '_res')
+        return res
+    except IndexError:
+        return None
+
 def try_gates(board): #genere les 48 nouveaux boards (en 3/100 de sec)
     liste = [time]
-    a = turn4(free) 
+    a = turn4(free)
+    i = 0
     for elem in a:
         for gate in GATES:
             b = slideTiles(board, elem, gate)
-            liste.append(b)
-    with open ('all_board.txt', 'w') as file:
-      time2 = str(datetime.now())
-      c = str(liste) + time2
-      file.write(c)
+            i += 1 
+            d = path(27, 35, b)
+            if d != None:
+                print('there is a path')
+                return d
+            else : 
+                print(str(d) + str(i))
+
 
 try_gates(board)
-

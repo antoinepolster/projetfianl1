@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 import copy
 import threading
+from collections import deque
 
 #       A     B     C
 #    0  1  2  3  4  5  6
@@ -39,8 +40,8 @@ port = 8882
 data = {
     "request": "subscribe",
     "port": port,
-    "name": "antoinepolster2",
-    "matricules": ["200901", "200901"]
+    "name": "test path",
+    "matricules": ["200902", "200902"]
  }
 
 request = json.dumps(data).encode()
@@ -92,44 +93,115 @@ def turn4(tile): #tourne la freetile dans les 3 sens diff + ajoute la freetile
         old_b = copy.deepcopy(b)
     return a, #print(str(a) + '_turn4')
 
+#début du l'ajout
+def add(A, B):
+    return tuple(a + b for a, b in zip(A, B))
+
+def index2coords(index):
+    return index // 7, index % 7
+
+DIRECTIONS = {
+    "N": {"coords": (-1, 0), "inc": -7, "opposite": "S"},
+    "S": {"coords": (1, 0), "inc": 7, "opposite": "N"},
+    "W": {"coords": (0, -1), "inc": -1, "opposite": "E"},
+    "E": {"coords": (0, 1), "inc": 1, "opposite": "W"},
+    (-1, 0): {"name": "N"},
+    (1, 0): {"name": "S"},
+    (0, -1): {"name": "W"},
+    (0, 1): {"name": "E"},
+}
+
+def isCoordsValid(i, j):
+    return i >= 0 and i < 7 and j >= 0 and i < 7
+
+def coords2index(i, j):
+    return i * 7 + j
+
+def BFS(start, successors, goals):
+    q = deque()
+    parent = {}
+    parent[start] = None
+    node = start
+    while node not in goals:
+        for successor in successors(node):
+            if successor not in parent:
+                parent[successor] = node
+                q.append(successor)
+        node = q.popleft()
+
+    res = []
+    while node is not None:
+        res.append(node)
+        node = parent[node]
+
+    return list(reversed(res))
+
+def path(start, end, board):
+    def successors(index):
+        res = []
+        for dir in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+            coords = add(index2coords(index), dir)
+            dirName = DIRECTIONS[dir]["name"]
+            opposite = DIRECTIONS[dirName]["opposite"]
+            # breakpoint()
+            if isCoordsValid(*coords):
+                if board[index][dirName] and board[coords2index(*coords)][opposite]:
+                    res.append(coords2index(*coords))
+        return res
+
+    try:
+        res = BFS(start, successors, [end])
+        print(str(res) + '_res')
+        return res
+    except IndexError:
+        return None
+#fin de l'ajout 
+
 def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédefini
    state = message['state']
    freetile = state['tile']
-   print(str(freetile) + '_freetile')
    board = state['board']
    target = state['target']
+   #target = 10
+   print(target)
    remaining = state['remaining']
    positions = state['positions']
+   #positions = 0
+   print(positions)
 
    def try_gates(board): #genere les 48 nouveaux boards (en environ 3/100 de sec)
-    time = str(datetime.now())
-    liste = [time]
-    a = turn4(freetile) 
+    a = turn4(freetile)
+    i = 0 
     for elem in a:
         for gate in GATES:
             b = slideTiles(board, elem, gate)
-            liste.append(b)
-    with open ('all_boardstest.txt', 'w') as file:
-      time2 = str(datetime.now())
-      c = str(liste) + time2
-      file.write(c)
+            i += 1 
+            d = path(positions, target, b)
+            if d != None:
+
+                move = {
+                        "tile": elem,
+                        "gate": gate,
+                        "new_position": i
+                        }
+                
+                play = {
+                        "response": "move",
+                        "move": move,
+                        "message": "there is a path"
+                        }
+
+                envoie = json.dumps(play).encode()
+                client.send(envoie)
+
+                return print('envoyé')
+            else : 
+                print(str(d) + '_' + str(i))
 
    try_gates(board)
 
-   move = {
-   "tile": freetile,
-   "gate": "H",
-   "new_position": 45
-      }
-
-   play = {
-   "response": "move",
-   "move": move,
-   "message": "antoine 1"
-      }
-
-   envoie = json.dumps(play).encode() 
-   client.send(envoie) #pour l'instant il envoie encore un move prédéfini
+   #envoie = json.dumps(play).encode() 
+   #client.send(envoie) #pour l'instant il envoie encore un move prédéfini
    #print('#__message__start__target__ at__' + time + '#' + '\n' + str(target) + '\n' + '#__message__end__target#' + '\n')
    #print('#__message__start__position__ at__' + time + '#' + '\n' + str(positions) + '\n' + '#__message__end__posistion#' + '\n')
    #print('#__message__start__board__ at__' + time + '#' + '\n' + str(board) + '\n' + '#__message__end__board#' + '\n')

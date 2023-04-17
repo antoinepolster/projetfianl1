@@ -95,11 +95,13 @@ def turn4(tile): #tourne la freetile dans les 3 sens diff + ajoute la freetile
 def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédefini
    state = message['state']
    freetile = state['tile']
-   print(str(freetile) + '_freetile')
    board = state['board']
    target = state['target']
    remaining = state['remaining']
    positions = state['positions']
+
+   print(str(freetile) + '_freetile')
+   #print('\n'+'#########'+'\n'+'#       #####'+'\n'+'#       #   #'+'\n'+'#       #   #  ->  Petite chope ?'+'\n'+'#       #   #'+'\n'+'#       #####'+'\n'+'#########'+'\n')
 
    def try_gates(board): #genere les 48 nouveaux boards (en environ 3/100 de sec)
     time = str(datetime.now())
