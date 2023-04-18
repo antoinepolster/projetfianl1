@@ -80,10 +80,6 @@ def turn_tile(tile): #tourne la freetile de 90°
     res["W"] = tile["N"]
     return res
 
-#   a      b
-#  d b -> a c
-#   c      d
-
 def turn4(tile): #tourne la freetile dans les 3 sens diff + ajoute la freetile
     old_b = tile
     a = [tile]
@@ -152,11 +148,19 @@ def path(start, end, board):
 
     try:
         res = BFS(start, successors, [end])
-        print(str(res) + '_res')
+        print(str(res) + '_path')
         return res
     except IndexError:
         return None
-#fin de l'ajout 
+#fin de l'ajout
+
+#def no_direct_path(): #essayer de trouver une gate pour que l'adversaire soit bloqué entre 4 murs
+
+
+def new_position(path):
+    a = len(path)
+    position = path[a - 1]
+    return position
 
 def wich_player(state):
     players = state['players']
@@ -165,52 +169,69 @@ def wich_player(state):
     else : 
         return False
 
+def display_errors(errors):
+    if len(errors) != 0:
+        a = errors[0]
+        b = a['message']
+        print('_/!\_error_start_/!\_' + '\n' +  str(b) + '\n' +'_/!\_error_end_/!\_')
+
 def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédefini
-   state = message['state']
-   freetile = state['tile']
-   board = state['board']
-   target = state['target']
-   remaining = state['remaining'] # quelle importance ? 
-   positions = state['positions']
-   a = wich_player(state) 
-   print(str(a) + '_player')
+    state = message['state']
+    erros = message['errors']
+    target_both = state['target']
+    freetile = state['tile']
+    board = state['board']
+    remainings = state['remaining']
+    positions = state['positions']
 
-   def try_gates(board): #genere les 48 nouveaux boards (en environ 3/100 de sec)
-    a = turn4(freetile)
-    i = 0 
-    for elem in a:
-        for gate in GATES:
-            b = slideTiles(board, elem, gate)
-            i += 1 
-            d = path(positions, target, b)
-            if d != None:
+    display_errors(erros)
+    a = wich_player(state)
 
-                move = {
+    if a == True:
+        position_player = positions[0]
+        remaining_player = remainings[0]
+    else : 
+        position_player = positions[1]
+        remaining_player = remainings[1]
+
+    print(str(position_player) + '_player_position')
+    print(remaining_player + '_remaining_tresors')
+
+    def try_gates(board): #genere les 48 nouveaux boards (en environ 3/100 de sec)
+        a = turn4(freetile)
+        i = 0 
+        for elem in a:
+            for gate in GATES:
+                b = slideTiles(board, elem, gate)
+                i += 1 
+                d = path(position_player, target_both, b)
+                if d != None:
+                    position = new_position(d)
+
+                    move = {
                         "tile": elem,
                         "gate": gate,
-                        "new_position": i
+                        "new_position": position
                         }
                 
-                play = {
+                    play = {
                         "response": "move",
                         "move": move,
                         "message": "there is a path"
                         }
 
-                envoie = json.dumps(play).encode()
-                client.send(envoie)
+                    envoie = json.dumps(play).encode()
+                    client.send(envoie)
+                    time1 = str(datetime.now())
+                    print(str(time1) + '_time_send')
 
-                return print('envoyé')
-            else : 
-                print(str(d) + '_' + str(i))
+                    return print('envoyé')
+                else : 
+                    try_i = str(str(d) + '_' + str(i))
+                    if try_i == 'None_48':
+                        print('there is no path')
 
-   try_gates(board)
-
-   #envoie = json.dumps(play).encode() 
-   #client.send(envoie) #pour l'instant il envoie encore un move prédéfini
-   #print('#__message__start__target__ at__' + time + '#' + '\n' + str(target) + '\n' + '#__message__end__target#' + '\n')
-   #print('#__message__start__position__ at__' + time + '#' + '\n' + str(positions) + '\n' + '#__message__end__posistion#' + '\n')
-   #print('#__message__start__board__ at__' + time + '#' + '\n' + str(board) + '\n' + '#__message__end__board#' + '\n')
+    try_gates(board)
 
 with socket.socket() as s:
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -225,6 +246,8 @@ with socket.socket() as s:
              if message['request'] == 'ping':
                 pong()
              elif message['request'] == 'play':
+                time = str(datetime.now())
+                print(str(time) + '_time_start')
                 sendplay()
              else :
                 print(message)

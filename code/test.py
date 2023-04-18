@@ -1,5 +1,5 @@
-targets = [0, 48]
+message = []
 
-a = targets[0]
+a = len(message)
 
 print(a)

@@ -33,7 +33,7 @@ s = socket.socket()
 serverAddress = ('localhost', 3000) #adresse du serveur 
 s.connect(serverAddress)
 
-port = 8882
+port = 8888
 name = "client"
 
 data = {
@@ -117,7 +117,7 @@ def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédef
 
     print(position_player)
     print(remaining_player)
-   
+
     def try_gates(board): #genere les 48 nouveaux boards (en environ 3/100 de sec)
         time = str(datetime.now())
         liste = [time]
