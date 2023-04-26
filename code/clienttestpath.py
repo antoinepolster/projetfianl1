@@ -37,12 +37,13 @@ s.connect(serverAddress)
 
 port = 8882
 name = "test path"
+matricule = "20090"
 
 data = {
     "request": "subscribe",
     "port": port,
     "name": name,
-    "matricules": ["200902", "200902"]
+    "matricules": [matricule, matricule]
  }
 
 request = json.dumps(data).encode()
@@ -56,6 +57,7 @@ serverAddress2 = ('0.0.0.0', port) #mon adresse
 def pong(): #pour rester connecter
    pong = json.dumps({'response': 'pong'}).encode()
    client.send(pong)
+
 
 def slideTiles(board, free, gate): 
     start = GATES[gate]["start"]
@@ -80,6 +82,7 @@ def turn_tile(tile): #tourne la freetile de 90°
     res["W"] = tile["N"]
     return res
 
+
 def turn4(tile): #tourne la freetile dans les 3 sens diff + ajoute la freetile
     old_b = tile
     a = [tile]
@@ -88,14 +91,18 @@ def turn4(tile): #tourne la freetile dans les 3 sens diff + ajoute la freetile
         i += 1 
         a.append(b)
         old_b = copy.deepcopy(b)
+    print(a)
     return a
+
 
 #début du l'ajout
 def add(A, B):
     return tuple(a + b for a, b in zip(A, B))
 
+
 def index2coords(index):
     return index // 7, index % 7
+
 
 DIRECTIONS = {
     "N": {"coords": (-1, 0), "inc": -7, "opposite": "S"},
@@ -108,11 +115,14 @@ DIRECTIONS = {
     (0, 1): {"name": "E"},
 }
 
+
 def isCoordsValid(i, j):
     return i >= 0 and i < 7 and j >= 0 and i < 7
 
+
 def coords2index(i, j):
     return i * 7 + j
+
 
 def BFS(start, successors, goals):
     q = deque()
@@ -133,6 +143,7 @@ def BFS(start, successors, goals):
 
     return list(reversed(res))
 
+
 def path(start, end, board):
     def successors(index):
         res = []
@@ -148,19 +159,43 @@ def path(start, end, board):
 
     try:
         res = BFS(start, successors, [end])
-        print(str(res) + '_path')
+        print(str(res) + '_mon_chemin')
         return res
     except IndexError:
         return None
 #fin de l'ajout
 
-#def no_direct_path(): #essayer de trouver une gate pour que l'adversaire soit bloqué entre 4 murs
+#mauvaise tactique
+#def no_direct_path(positions, target_both, freetile, board): #essayer de trouver une gate pour que l'adversaire soit bloqué entre 4 murs
+    position_opponent = positions[1]
+    a = turn4(freetile)
+    i = 0
+    for elem in a:
+        for gate in GATES:
+            b = slideTiles(board, elem, gate)
+            i += 1 
+            d = path(position_opponent, target_both, b)
+            if d == None:
+                return gate, elem
+            else :
+                print(str(d) + '_' + str(i) + '_opponent_path')
+
+#voir test.py pour termine ça 
+#def random_gate(positions):
+    position_opponent = positions[1]
+    tilesaround = []
+    a = position_opponent - 7
+    b = position_opponent + 1
+    c = position_opponent + 7
+    d = position_opponent - 1
+    tilesaround.append(a, b, c ,d)
 
 
 def new_position(path):
     a = len(path)
     position = path[a - 1]
     return position
+
 
 def wich_player(state):
     players = state['players']
@@ -169,16 +204,19 @@ def wich_player(state):
     else : 
         return False
 
+
 def display_errors(errors):
     if len(errors) != 0:
         a = errors[0]
         b = a['message']
         print('_/!\_error_start_/!\_' + '\n' +  str(b) + '\n' +'_/!\_error_end_/!\_')
 
+
 def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédefini
     state = message['state']
     erros = message['errors']
-    target_both = state['target']
+    target = state['target']
+    #print(str(target) + '_target')
     freetile = state['tile']
     board = state['board']
     remainings = state['remaining']
@@ -194,19 +232,22 @@ def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédef
         position_player = positions[1]
         remaining_player = remainings[1]
 
-    print(str(position_player) + '_player_position')
-    print(remaining_player + '_remaining_tresors')
+    #print(str(position_player) + '_player_position')
+    #print(str(remaining_player) + '_remaining_tresors')
 
-    def try_gates(board): #genere les 48 nouveaux boards (en environ 3/100 de sec)
+    def try_gates(board):
         a = turn4(freetile)
         i = 0 
         for elem in a:
             for gate in GATES:
                 b = slideTiles(board, elem, gate)
                 i += 1 
-                d = path(position_player, target_both, b)
+                d = path(position_player, target, b)
                 if d != None:
                     position = new_position(d)
+                    print(str(i) + 'it is i')
+                    #new_tile = a[i - 1]
+                    #print("new tile" + new_tile)
 
                     move = {
                         "tile": elem,
@@ -222,16 +263,35 @@ def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédef
 
                     envoie = json.dumps(play).encode()
                     client.send(envoie)
-                    time1 = str(datetime.now())
-                    print(str(time1) + '_time_send')
+                    print(str(play) + '_the_play')
+                    #print(str(position) + '_new_position')
 
-                    return print('envoyé')
-                else : 
+                    return
+                else : #plein de soucis à regler quand je n'ai pas de chemin 
                     try_i = str(str(d) + '_' + str(i))
                     if try_i == 'None_48':
                         print('there is no path')
+                        #no_direct_path(positions, target, freetile, board)
+                        
+                        move = {
+                            "tile": elem,
+                            "gate": gate,
+                            "new_position": position_player
+                            }
+                
+                        play = {
+                            "response": "move",
+                            "move": move,
+                            "message": "the opponent is blocked"
+                            }
+                        envoie = json.dumps(play).encode()
+                        client.send(envoie)
+                        time2 = str(datetime.now())
+                        print(play)
+                        print(str(time2) + '_time_send_wrong_path')
 
     try_gates(board)
+
 
 with socket.socket() as s:
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -241,15 +301,18 @@ with socket.socket() as s:
     while True : 
         try:
           client, serverAddress = s.accept()
+          message = 0 
           with client:
              message = json.loads(client.recv(16224).decode())
+             print(message)
              if message['request'] == 'ping':
                 pong()
              elif message['request'] == 'play':
-                time = str(datetime.now())
-                print(str(time) + '_time_start')
+                #time = str(datetime.now())
+                #print(message)
+                #print(str(time) + '_time_start')
                 sendplay()
              else :
-                print(message)
+                print(message)   
         except OSError :
              print('Serveur introuvable, connexion impossible.')
