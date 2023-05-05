@@ -35,7 +35,7 @@ s = socket.socket()
 serverAddress = ('localhost', 3000) #adresse du serveur 
 s.connect(serverAddress)
 
-port = 8882
+port = 8888
 name = "test path"
 matricule = "20090"
 
@@ -57,6 +57,7 @@ serverAddress2 = ('0.0.0.0', port) #mon adresse
 def pong(): #pour rester connecter
    pong = json.dumps({'response': 'pong'}).encode()
    client.send(pong)
+   print(pong)
 
 
 def slideTiles(board, free, gate): 
@@ -216,7 +217,6 @@ def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédef
     state = message['state']
     erros = message['errors']
     target = state['target']
-    #print(str(target) + '_target')
     freetile = state['tile']
     board = state['board']
     remainings = state['remaining']
@@ -228,9 +228,11 @@ def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédef
     if a == True:
         position_player = positions[0]
         remaining_player = remainings[0]
+        position_opponent = positions[1]
     else : 
         position_player = positions[1]
         remaining_player = remainings[1]
+        position_opponent = positions[0]
 
     #print(str(position_player) + '_player_position')
     #print(str(remaining_player) + '_remaining_tresors')
@@ -246,8 +248,6 @@ def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédef
                 if d != None:
                     position = new_position(d)
                     print(str(i) + 'it is i')
-                    #new_tile = a[i - 1]
-                    #print("new tile" + new_tile)
 
                     move = {
                         "tile": elem,
@@ -271,25 +271,30 @@ def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédef
                     try_i = str(str(d) + '_' + str(i))
                     if try_i == 'None_48':
                         print('there is no path')
-                        #no_direct_path(positions, target, freetile, board)
-                        
-                        move = {
-                            "tile": elem,
-                            "gate": gate,
-                            "new_position": position_player
-                            }
-                
-                        play = {
-                            "response": "move",
-                            "move": move,
-                            "message": "the opponent is blocked"
-                            }
-                        envoie = json.dumps(play).encode()
-                        client.send(envoie)
-                        time2 = str(datetime.now())
-                        print(play)
-                        print(str(time2) + '_time_send_wrong_path')
+                        for elem_a in a:
+                            for gate_a in GATES:
+                                c = slideTiles(board, elem_a, gate_a)
+                                e = path(position_opponent, target, c)
+                                if e == None:
 
+                                    move_a = {
+                                        "tile": elem_a,
+                                        "gate": gate_a,
+                                        "new_position": position_player
+                                        }
+                                    
+                                    play_a = {
+                                        "response": "move",
+                                        "move": move_a,
+                                        "message": "the opponent is blocked"
+                                        }
+                                    
+                                    envoie_a = json.dumps(play_a).encode()
+                                    client.send(envoie_a)
+                                    time2 = str(datetime.now())
+                                    print(play_a)
+                                    print(str(time2) + '_time_send_wrong_path')
+                
     try_gates(board)
 
 
