@@ -1,7 +1,6 @@
 import unittest
 import gridutils
 from gridutils import *
-import pytest
 
 class TestUtils(unittest.TestCase):
     def test_slideTiles(self):

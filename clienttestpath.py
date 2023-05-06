@@ -38,7 +38,6 @@ s = socket.socket()
 serverAddress = ('localhost', 3000) #adresse du serveur 
 s.connect(serverAddress)
 
-#port = 8884
 port= random.randint(1000, 9999)
 print (port)
 
@@ -64,12 +63,6 @@ def pong(): #pour rester connecter
    pong = json.dumps({'response': 'pong'}).encode()
    client.send(pong)
 
-###from here
-
-
-#to here
-
-
 
 def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédefini
     state = message['state']
@@ -92,8 +85,6 @@ def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédef
         remaining_player = remainings[1]
         position_opponent = positions[0]
 
-    #print(str(position_player) + '_player_position')
-    #print(str(remaining_player) + '_remaining_tresors')
 
     def try_gates(board):
         a = turn4(freetile)
@@ -105,7 +96,6 @@ def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédef
                 d = path(position_player, target, b)
                 if d != None:
                     position = new_position(d)
-                    #print(str(i) + 'it is i')
 
                     move = {
                         "tile": elem,
@@ -121,10 +111,8 @@ def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédef
 
                     envoie = json.dumps(play).encode()
                     client.send(envoie)
-                    #print(str(play) + '_the_play')
-                    #print(str(position) + '_new_position')
-
                     return
+                
                 else : #plein de soucis à regler quand je n'ai pas de chemin 
                     try_i = str(str(d) + '_' + str(i))
                     if try_i == 'None_48':
@@ -149,9 +137,7 @@ def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédef
                                     
                                     envoie_a = json.dumps(play_a).encode()
                                     client.send(envoie_a)
-                                    time2 = str(datetime.now())
-                                    #print(play_a)
-                                    #print(str(time2) + '_time_send_wrong_path')
+
                 
     try_gates(board)
 
@@ -170,9 +156,6 @@ with socket.socket() as s:
              if message['request'] == 'ping':
                 pong()
              elif message['request'] == 'play':
-                #time = str(datetime.now())
-                #print(message)
-                #print(str(time) + '_time_start')
                 sendplay()
              else :
                 print(message)   
