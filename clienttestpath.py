@@ -18,7 +18,6 @@ import random
 #       I     H     G
 
 
-
 GATES = {
     "A": {"start": 1, "end": 43, "inc": 7},
     "B": {"start": 3, "end": 45, "inc": 7},
@@ -70,19 +69,6 @@ def pong(): #pour rester connecter
 
 #to here
 
-def wich_player(state):
-    players = state['players']
-    if players[0] == name:
-        return True
-    else : 
-        return False
-
-
-def display_errors(errors):
-    if len(errors) != 0:
-        a = errors[0]
-        b = a['message']
-        print('_/!\_error_start_/!\_' + '\n' +  str(b) + '\n' +'_/!\_error_end_/!\_')
 
 
 def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédefini

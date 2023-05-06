@@ -4,6 +4,8 @@ from datetime import datetime
 import copy
 from collections import deque
 
+name = "test path"
+
 GATES = {
     "A": {"start": 1, "end": 43, "inc": 7},
     "B": {"start": 3, "end": 45, "inc": 7},
@@ -17,6 +19,17 @@ GATES = {
     "J": {"start": 35, "end": 41, "inc": 1},
     "K": {"start": 21, "end": 27, "inc": 1},
     "L": {"start": 7, "end": 13, "inc": 1},
+}
+
+DIRECTIONS = {
+    "N": {"coords": (-1, 0), "inc": -7, "opposite": "S"},
+    "S": {"coords": (1, 0), "inc": 7, "opposite": "N"},
+    "W": {"coords": (0, -1), "inc": -1, "opposite": "E"},
+    "E": {"coords": (0, 1), "inc": 1, "opposite": "W"},
+    (-1, 0): {"name": "N"},
+    (1, 0): {"name": "S"},
+    (0, -1): {"name": "W"},
+    (0, 1): {"name": "E"},
 }
 
 def slideTiles(board, free, gate): 
@@ -33,6 +46,7 @@ def slideTiles(board, free, gate):
         src -= inc
     new_board[start] = free
     return new_board
+
 
 def turn_tile(tile): #tourne la freetile de 90°
     res = copy.deepcopy(tile)
@@ -53,7 +67,6 @@ def turn4(tile): #tourne la freetile dans les 3 sens diff + ajoute la freetile
         old_b = copy.deepcopy(b)
     return a
 
-
 #début du l'ajout
 def add(A, B):
     return tuple(a + b for a, b in zip(A, B))
@@ -61,18 +74,6 @@ def add(A, B):
 
 def index2coords(index):
     return index // 7, index % 7
-
-
-DIRECTIONS = {
-    "N": {"coords": (-1, 0), "inc": -7, "opposite": "S"},
-    "S": {"coords": (1, 0), "inc": 7, "opposite": "N"},
-    "W": {"coords": (0, -1), "inc": -1, "opposite": "E"},
-    "E": {"coords": (0, 1), "inc": 1, "opposite": "W"},
-    (-1, 0): {"name": "N"},
-    (1, 0): {"name": "S"},
-    (0, -1): {"name": "W"},
-    (0, 1): {"name": "E"},
-}
 
 
 def isCoordsValid(i, j):
@@ -110,9 +111,6 @@ def path(start, end, board):
             coords = add(index2coords(index), dir)
             dirName = DIRECTIONS[dir]["name"]
             opposite = DIRECTIONS[dirName]["opposite"]
-            a = isCoordsValid(*coords)
-            print(*coords)
-            print(a)
             if isCoordsValid(*coords):
                 if board[index][dirName] and board[coords2index(*coords)][opposite]:
                     res.append(coords2index(*coords))
@@ -124,8 +122,24 @@ def path(start, end, board):
         return res
     except IndexError:
         return None
-    
+
+
 def new_position(path):
     a = len(path)
     position = path[a - 1]
     return position
+
+
+def wich_player(state):
+    players = state['players']
+    if players[0] == name:
+        return True
+    else : 
+        return False
+
+
+def display_errors(errors):
+    if len(errors) != 0:
+        a = errors[0]
+        b = a['message']
+        print('_/!\_error_start_/!\_' + '\n' +  str(b) + '\n' +'_/!\_error_end_/!\_')
