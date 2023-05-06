@@ -119,7 +119,7 @@ def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédef
                 d = path(position_player, target, b)
                 if d != None:
                     position = new_position(d)
-                    print(str(i) + 'it is i')
+                    #print(str(i) + 'it is i')
 
                     move = {
                         "tile": elem,
@@ -135,7 +135,7 @@ def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédef
 
                     envoie = json.dumps(play).encode()
                     client.send(envoie)
-                    print(str(play) + '_the_play')
+                    #print(str(play) + '_the_play')
                     #print(str(position) + '_new_position')
 
                     return
@@ -164,8 +164,8 @@ def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédef
                                     envoie_a = json.dumps(play_a).encode()
                                     client.send(envoie_a)
                                     time2 = str(datetime.now())
-                                    print(play_a)
-                                    print(str(time2) + '_time_send_wrong_path')
+                                    #print(play_a)
+                                    #print(str(time2) + '_time_send_wrong_path')
                 
     try_gates(board)
 
