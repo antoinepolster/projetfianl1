@@ -27,5 +27,5 @@ Pour ce qui est de la discussion avec le serveur : mon client reçoit tout les m
 * récuperer la freetile et la faire pivoter dans le 4 sens possibles
 * pour chaque sens, l'insérer dans le current board et récuper le new board
 * essayer de trouver un chemin entre le notre position et la target à l'aide de BFS
-* * dés qu'on trouve un chemin : s'arrèter 
+     * dés qu'on trouve un chemin : s'arrèter 
 * * si on ne trouve pas de chemin on essaie en boucle jusqu'au 48 essaie 
