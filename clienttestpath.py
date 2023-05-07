@@ -4,17 +4,6 @@ from datetime import datetime
 from collections import deque
 from gridutils import *
 
-#       A     B     C
-#    0  1  2  3  4  5  6
-# L  7  8  9 10 11 12 13 D
-#   14 15 16 17 18 19 20
-# K 21 22 23 24 25 26 27 E
-#   28 29 30 31 32 33 34
-# J 35 36 37 38 39 40 41 F
-#   42 43 44 45 46 47 48
-#       I     H     G
-
-
 GATES = {
     "A": {"start": 1, "end": 43, "inc": 7},
     "B": {"start": 3, "end": 45, "inc": 7},
@@ -38,7 +27,6 @@ s.connect(serverAddress)
 port = 8880
 
 name = "test path"
-#name = "player_"+str(random.randint(100, 999))
 matricule = "20090"
 
 data = {
@@ -56,12 +44,12 @@ s.close()
 
 serverAddress2 = ('0.0.0.0', port) #mon adresse 
 
-def pong(): #pour rester connecter
+def pong(): #envoie ping rester connecter
    pong = json.dumps({'response': 'pong'}).encode()
    client.send(pong)
 
 
-def send_to_serv(elem, gate, position, message):
+def send_to_serv(elem, gate, position, message): #envoie ce qu'on veut jouer au serveur
     move = { 
         "tile": elem,
         "gate": gate,
@@ -80,11 +68,11 @@ def send_to_serv(elem, gate, position, message):
 
 
 def sendplay(message): 
-    print("\n" + "_message2_" + str(message))
+    #print("\n" + "_message2_" + str(message))
     state = message['state']
     erros = message['errors']
     target = state['target']
-    print(str(target) + "_target1")
+    #print(str(target) + "_target1")
     freetile = state['tile']
     board = state['board']
     remainings = state['remaining']
@@ -124,7 +112,7 @@ def sendplay(message):
     try_gates(board)
 
 
-with socket.socket() as s:
+with socket.socket() as s: #ouvre un socket, écoute ce qui arrive et l'envoie dans la bonne fonction d'après la valeur de 'request'
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind(serverAddress2)
     s.listen()

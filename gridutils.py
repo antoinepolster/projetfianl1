@@ -2,7 +2,6 @@ import copy
 import math
 from collections import deque
 
-
 name = "test path"
 
 GATES = {
@@ -31,7 +30,7 @@ DIRECTIONS = {
     (0, 1): {"name": "E"},
 }
 
-def slideTiles(board, free, gate): 
+def slideTiles(board, free, gate): #crée un nouveau board en fonction de la tile qu'on inserre dans une certaine gate
     start = GATES[gate]["start"]
     end = GATES[gate]["end"]
     inc = GATES[gate]["inc"]
@@ -66,7 +65,7 @@ def turn4(tile): #tourne la freetile dans les 3 sens diff + ajoute la freetile
         old_b = copy.deepcopy(b)
     return a
 
-#début du l'ajout
+
 def add(A, B):
     return tuple(a + b for a, b in zip(A, B))
 
@@ -75,14 +74,14 @@ def index2coords(index):
     return index // 7, index % 7
 
 
-def isCoordsValid(i, j):
+def isCoordsValid(i, j): #vérifie que la coordonnée est bien dans le plateau de jeu
     return i >= 0 and i < 7 and j >= 0 and j < 7
 # attention parler de cette fonction le j etait un i avant modif
 
 def coords2index(i, j):
     return i * 7 + j
 
-def BFS(start, successors, goals):
+def BFS(start, successors, goals): #trouve le chemin le plus court entre mon joueur et la tagret
     q = deque()
     parent = {}
     parent[start] = None
@@ -102,7 +101,7 @@ def BFS(start, successors, goals):
     return list(reversed(res))
 
 
-def path(start, end, board):
+def path(start, end, board): # regarde si il existe un chemin entre mon joueur et la target
     def successors(index):
         res = []
         for dir in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
@@ -122,13 +121,13 @@ def path(start, end, board):
         return None
 
 
-def new_position(path):
+def new_position(path): # renvoie la nouvelle position de mon joueur après son déplacement
     a = len(path)
     position = path[a - 1]
     return position
 
 
-def wich_player(state, name):
+def wich_player(state, name): # me dit si je suis le joueur 1 ou 2 
     players = state['players']
     if players[0] == name:
         return True
@@ -136,14 +135,14 @@ def wich_player(state, name):
         return False
 
 
-def display_errors(errors):
+def display_errors(errors): # si il y'a une erreur, cette fonction l'affiche dans le terminal
     if len(errors) != 0:
         a = errors[0]
         b = a['message']
         print('_/!\_error_start_/!\_' + '\n' +  str(b) + '\n' +'_/!\_error_end_/!\_')
 
 
-def newPosition(oldPositionIndex, inputGate):
+def newPosition(oldPositionIndex, inputGate): #me donne la nouvelle position de mon joueur si celui-ci se trouve sur une tile qui a bougé
     print("oldpos_" + str(oldPositionIndex))
     print("gate_" + str(inputGate))
     if (abs(inputGate['inc']) == 7 and index2coords(inputGate["start"])[1] == index2coords(oldPositionIndex)[1]):
