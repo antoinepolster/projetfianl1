@@ -1,11 +1,8 @@
 import socket
 import json
 from datetime import datetime
-import copy
-import threading
 from collections import deque
 from gridutils import *
-import random
 
 #       A     B     C
 #    0  1  2  3  4  5  6
@@ -42,7 +39,7 @@ port = 8880
 
 name = "test path"
 #name = "player_"+str(random.randint(100, 999))
-matricule = "20090"+"_"+str(random.randint(100, 999))
+matricule = "20090"
 
 data = {
     "request": "subscribe",
