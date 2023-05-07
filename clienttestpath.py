@@ -1,8 +1,18 @@
 import socket
 import json
-from datetime import datetime
-from collections import deque
+#from datetime import datetime
 from gridutils import *
+import random
+
+#       A     B     C
+#    0  1  2  3  4  5  6
+# L  7  8  9 10 11 12 13 D
+#   14 15 16 17 18 19 20
+# K 21 22 23 24 25 26 27 E
+#   28 29 30 31 32 33 34
+# J 35 36 37 38 39 40 41 F
+#   42 43 44 45 46 47 48
+#       I     H     G
 
 GATES = {
     "A": {"start": 1, "end": 43, "inc": 7},
@@ -24,7 +34,7 @@ s = socket.socket()
 serverAddress = ('localhost', 3000) #adresse du serveur 
 s.connect(serverAddress)
 
-port = 8880
+port = 4444
 
 name = "test path"
 matricule = "20090"
@@ -68,27 +78,27 @@ def send_to_serv(elem, gate, position, message): #envoie ce qu'on veut jouer au 
 
 
 def sendplay(message): 
-    #print("\n" + "_message2_" + str(message))
     state = message['state']
     erros = message['errors']
-    target = state['target']
-    #print(str(target) + "_target1")
+    target_item = state['target']
     freetile = state['tile']
     board = state['board']
     remainings = state['remaining']
     positions = state['positions']
+
+    target = getTargetPosition(target_item, board)
 
     display_errors(erros)
     a = wich_player(state, name)
 
     if a == True:
         old_position_player = positions[0]
-        remaining_player = remainings[0]
-        position_opponent = positions[1]
+        #remaining_player = remainings[0]
+        #position_opponent = positions[1]
     else : 
         old_position_player = positions[1]
-        remaining_player = remainings[1]
-        position_opponent = positions[0]
+        #remaining_player = remainings[1]
+        #position_opponent = positions[0]
 
 
     def try_gates(board):
@@ -107,7 +117,8 @@ def sendplay(message):
                 
                 if (d == None and i == 48):    
                     print('there is no path_' + str(i))
-                    send_to_serv(elem, "K", newPosition(old_position_player, GATES["K"]), "there is no path")
+                    r = random.choice(["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"])
+                    send_to_serv(elem, r, newPosition(old_position_player, GATES[r]), "there is no path")
                     return      
     try_gates(board)
 

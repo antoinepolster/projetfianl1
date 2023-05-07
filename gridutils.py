@@ -156,3 +156,8 @@ def newPosition(oldPositionIndex, inputGate): #me donne la nouvelle position de 
         else:
             return coords2index(index2coords(oldPositionIndex)[0], (index2coords(oldPositionIndex)[1]+int(math.copysign(1, inputGate['inc']))) % 7)
     return oldPositionIndex
+
+def getTargetPosition(target, board): # trouve la tuile target à partir de son item
+    for i in range(49):
+        if board[i]['item'] == target:
+            return i
