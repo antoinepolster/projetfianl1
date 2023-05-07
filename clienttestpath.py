@@ -81,12 +81,15 @@ def sendplay(message):
     state = message['state']
     erros = message['errors']
     target_item = state['target']
+    print("target_item" + str(target_item))
     freetile = state['tile']
     board = state['board']
-    remainings = state['remaining']
+    print("board_" + str(board))
+    #remainings = state['remaining']
     positions = state['positions']
 
     target = getTargetPosition(target_item, board)
+    print("target_" + str(target))
 
     display_errors(erros)
     a = wich_player(state, name)
