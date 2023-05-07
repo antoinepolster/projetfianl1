@@ -1,4 +1,0 @@
-glfw
-imgui[glfw]
-jsonpickle
-Pillow
