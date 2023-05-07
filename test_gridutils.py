@@ -72,6 +72,8 @@ class TestUtils(unittest.TestCase):
 
     def test_newPosition(self):
         assert gridutils.newPosition(48, {'start': 1, 'end': 43, 'inc': 7}) == 48
+        assert gridutils.newPosition(24, {'start': 27, 'end': 21, 'inc': -1}) == 23
+
 
 if __name__ == '__main__':
     suite = unittest.TestLoader().loadTestsFromTestCase(TestUtils)
