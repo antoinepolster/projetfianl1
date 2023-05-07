@@ -118,7 +118,7 @@ def coords2index(i, j):
 
 
 def isCoordsValid(i, j):
-    return i >= 0 and i < 7 and j >= 0 and i < 7
+    return i >= 0 and i < 7 and j >= 0 and j < 7
 
 
 def add(A, B):
@@ -160,7 +160,6 @@ def path(start, end, board):
 
     try:
         res = BFS(start, successors, [end])
-        print(res)
         return res
     except IndexError:
         return None

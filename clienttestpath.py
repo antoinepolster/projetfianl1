@@ -38,18 +38,18 @@ s = socket.socket()
 serverAddress = ('localhost', 3000) #adresse du serveur 
 s.connect(serverAddress)
 
-port= random.randint(1000, 9999)
-print (port)
+port = 8880
 
 name = "test path"
-matricule = "20090"
+#name = "player_"+str(random.randint(100, 999))
+matricule = "20090"+"_"+str(random.randint(100, 999))
 
 data = {
     "request": "subscribe",
     "port": port,
     "name": name,
     "matricules": [matricule, matricule]
- }
+    }
 
 request = json.dumps(data).encode()
 s.send(request)
@@ -64,81 +64,66 @@ def pong(): #pour rester connecter
    client.send(pong)
 
 
-def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédefini
+def send_to_serv(elem, gate, position, message):
+    move = { 
+        "tile": elem,
+        "gate": gate,
+        "new_position": position
+            }
+                
+    play = {
+        "response": "move",
+        "move": move,
+        "message": message
+            }
+
+    envoie = json.dumps(play).encode()
+    client.send(envoie)
+    print("play_" + str(play))
+
+
+def sendplay(message): 
+    print("\n" + "_message2_" + str(message))
     state = message['state']
     erros = message['errors']
     target = state['target']
+    print(str(target) + "_target1")
     freetile = state['tile']
     board = state['board']
     remainings = state['remaining']
     positions = state['positions']
 
     display_errors(erros)
-    a = wich_player(state)
+    a = wich_player(state, name)
 
     if a == True:
-        position_player = positions[0]
+        old_position_player = positions[0]
         remaining_player = remainings[0]
         position_opponent = positions[1]
     else : 
-        position_player = positions[1]
+        old_position_player = positions[1]
         remaining_player = remainings[1]
         position_opponent = positions[0]
 
 
     def try_gates(board):
-        a = turn4(freetile)
+        tilesset = turn4(freetile)
         i = 0 
-        for elem in a:
+        for elem in tilesset:
             for gate in GATES:
                 b = slideTiles(board, elem, gate)
                 i += 1 
+                position_player = newPosition(old_position_player, GATES[gate])
+                print("position_" + str(position_player))
                 d = path(position_player, target, b)
                 if d != None:
-                    position = new_position(d)
-
-                    move = {
-                        "tile": elem,
-                        "gate": gate,
-                        "new_position": position
-                        }
-                
-                    play = {
-                        "response": "move",
-                        "move": move,
-                        "message": "there is a path"
-                        }
-
-                    envoie = json.dumps(play).encode()
-                    client.send(envoie)
+                    send_to_serv(elem, gate, new_position(d), "there is a path")
                     return
                 
-                else : #plein de soucis à regler quand je n'ai pas de chemin 
-                    try_i = str(str(d) + '_' + str(i))
-                    if try_i == 'None_48':
-                        print('there is no path')
-                        for elem_a in a:
-                            for gate_a in GATES:
-                                c = slideTiles(board, elem_a, gate_a)
-                                e = path(position_opponent, target, c)
-                                if e == None:
-
-                                    move_a = {
-                                        "tile": elem_a,
-                                        "gate": gate_a,
-                                        "new_position": position_player
-                                        }
-                                    
-                                    play_a = {
-                                        "response": "move",
-                                        "move": move_a,
-                                        "message": "the opponent is blocked"
-                                        }
-                                    
-                                    envoie_a = json.dumps(play_a).encode()
-                                    client.send(envoie_a)
-
-                
+                if (d == None and i == 48):    
+                    print('there is no path_' + str(i))
+                    send_to_serv(elem, "K", newPosition(old_position_player, GATES["K"]), "there is no path")
+                    return      
     try_gates(board)
 
 
@@ -150,13 +135,12 @@ with socket.socket() as s:
     while True : 
         try:
           client, serverAddress = s.accept()
-          message = 0 
           with client:
              message = json.loads(client.recv(16224).decode())
              if message['request'] == 'ping':
                 pong()
              elif message['request'] == 'play':
-                sendplay()
+                sendplay(message)
              else :
                 print(message)   
         except OSError :

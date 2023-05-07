@@ -36,7 +36,7 @@ s = socket.socket()
 serverAddress = ('localhost', 3000) #adresse du serveur 
 s.connect(serverAddress)
 
-port= random.randint(1000, 9999)
+port= 8886
 print (port)
 name = "clienttest"
 matricule = "200901"
@@ -112,7 +112,7 @@ DIRECTIONS = {
 }
 
 def isCoordsValid(i, j):
-    return i >= 0 and i < 7 and j >= 0 and i < 7
+    return i >= 0 and i < 7 and j >= 0 and j < 7
 
 def coords2index(i, j):
     return i * 7 + j
@@ -189,7 +189,7 @@ def display_errors(errors):
         b = a['message']
         print('_/!\_error_start_/!\_' + '\n' +  str(b) + '\n' +'_/!\_error_end_/!\_')
 
-def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédefini
+def sendplay(message): #reçoit une demande de mouvement et envoie un mouvement prédefini
     state = message['state']
     erros = message['errors']
     target_both = state['target']
@@ -244,9 +244,8 @@ def sendplay(): #reçoit une demande de mouvement et envoie un mouvement prédef
                     print(str(time1) + '_time_send')
 
                     return print('envoyé')
-                else : 
-                    try_i = str(str(d) + '_' + str(i))
-                    if try_i == 'None_48':
+                
+                if (d == None and i == 47):
                         print('there is no path')
                         no_direct_path(positions, target_both, freetile, board)
 
@@ -284,7 +283,8 @@ with socket.socket() as s:
              elif message['request'] == 'play':
                 time = str(datetime.now())
                 print(str(time) + '_time_start')
-                sendplay()
+                sendplay(message)
+                message = 0 
              else :
                 print(message)
         except OSError :

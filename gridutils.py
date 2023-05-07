@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 import copy
 from collections import deque
+import math
 
 name = "test path"
 
@@ -77,12 +78,11 @@ def index2coords(index):
 
 
 def isCoordsValid(i, j):
-    return i >= 0 and i < 7 and j >= 0 and i < 7
-
+    return i >= 0 and i < 7 and j >= 0 and j < 7
+# attention parler de cette fonction le j etait un i avant modif
 
 def coords2index(i, j):
     return i * 7 + j
-
 
 def BFS(start, successors, goals):
     q = deque()
@@ -130,7 +130,7 @@ def new_position(path):
     return position
 
 
-def wich_player(state):
+def wich_player(state, name):
     players = state['players']
     if players[0] == name:
         return True
@@ -143,3 +143,19 @@ def display_errors(errors):
         a = errors[0]
         b = a['message']
         print('_/!\_error_start_/!\_' + '\n' +  str(b) + '\n' +'_/!\_error_end_/!\_')
+
+
+def newPosition(oldPositionIndex, inputGate):
+    print("oldpos_" + str(oldPositionIndex))
+    print("gate_" + str(inputGate))
+    if (abs(inputGate['inc']) == 7 and index2coords(inputGate["start"])[1] == index2coords(oldPositionIndex)[1]):
+        if isCoordsValid((index2coords(oldPositionIndex)[0])+int(math.copysign(1, inputGate['inc'])), index2coords(oldPositionIndex)[1]):
+            return coords2index(index2coords(oldPositionIndex)[0]+int(math.copysign(1, inputGate['inc'])), index2coords(oldPositionIndex)[1])
+        else:
+            return coords2index((index2coords(oldPositionIndex)[0]+int(math.copysign(1, inputGate['inc']))) % 7, index2coords(oldPositionIndex)[1])
+    if (abs(inputGate['inc']) == 1 and index2coords(inputGate["start"])[0] == index2coords(oldPositionIndex)[0]):
+        if isCoordsValid((index2coords(oldPositionIndex)[0]), index2coords(oldPositionIndex)[1]+int(math.copysign(1, inputGate['inc']))):
+            return coords2index(index2coords(oldPositionIndex)[0], (index2coords(oldPositionIndex)[1])+int(math.copysign(1, inputGate['inc'])))
+        else:
+            return coords2index(index2coords(oldPositionIndex)[0], (index2coords(oldPositionIndex)[1]+int(math.copysign(1, inputGate['inc']))) % 7)
+    return oldPositionIndex
