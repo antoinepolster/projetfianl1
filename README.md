@@ -7,7 +7,7 @@ Polster Antoine 20090
 ### Pour le programme 
 __json__ : pour manipuler des fichierq json   
 __socket__ : pour pouvoir discuter avec le serveur  
-__copy__ : permettre de faire la copie d'un objet
+__copy__ : permettre de faire la copie d'un objet   
 __math__ : pour certaines opérations mathématiques
 
 ### Pour les tests unitaires
