@@ -1,6 +1,6 @@
 import socket
 import json
-from gridutils import *
+from adversaire_gridutils import *
 import random
 
 GATES = {
@@ -23,10 +23,10 @@ s = socket.socket()
 serverAddress = ('localhost', 3000) #adresse du serveur 
 s.connect(serverAddress)
 
-port = 4444
+port = 8880
 
-name = "test path"
-matricule = "20090"
+name = "adversaire"
+matricule = "20091"
 
 data = {
     "request": "subscribe",
@@ -63,7 +63,7 @@ def send_to_serv(elem, gate, position, message): #envoie ce qu'on veut jouer au 
 
     envoie = json.dumps(play).encode()
     client.send(envoie)
-    print("play")
+    print("play_" + str(play))
 
 
 def sendplay(message): 

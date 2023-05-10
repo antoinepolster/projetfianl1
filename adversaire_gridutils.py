@@ -2,7 +2,7 @@ import copy
 import math
 from collections import deque
 
-name = "test path"
+name = "adversaire"
 
 GATES = {
     "A": {"start": 1, "end": 43, "inc": 7},

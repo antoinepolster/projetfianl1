@@ -118,7 +118,7 @@ def coords2index(i, j):
 
 
 def isCoordsValid(i, j):
-    return i >= 0 and i < 7 and j >= 0 and j < 7
+    return i >= 0 and i < 7 and j >= 0 and i < 7
 
 
 def add(A, B):
