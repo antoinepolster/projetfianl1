@@ -1,13 +1,12 @@
 # Projet final PI2C : Labyrinthe 
 
-## étudiant 
+## Etudiant 
 Polster Antoine 20090
 
 ## Bibliothèques utilisées 
 ### Pour le programme 
 __json__ : pour manipuler des fichierq json   
 __socket__ : pour pouvoir discuter avec le serveur  
-__datetime__ : juste avoir une indication du temps
 __copy__ : permettre de faire la copie d'un objet
 __math__ : pour certaines opérations mathématiques
 
