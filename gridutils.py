@@ -66,7 +66,7 @@ def turn4(tile): #tourne la freetile dans les 3 sens diff + ajoute la freetile
     return a
 
 
-def add(A, B):
+def add(A, B): 
     return tuple(a + b for a, b in zip(A, B))
 
 
@@ -143,15 +143,15 @@ def display_errors(errors): # si il y'a une erreur, cette fonction l'affiche dan
 
 def newPosition(oldPositionIndex, inputGate): #me donne la nouvelle position de mon joueur si celui-ci se trouve sur une tile qui a bougé
     if (abs(inputGate['inc']) == 7 and index2coords(inputGate["start"])[1] == index2coords(oldPositionIndex)[1]):
-        if isCoordsValid((index2coords(oldPositionIndex)[0])+int(math.copysign(1, inputGate['inc'])), index2coords(oldPositionIndex)[1]):
-            return coords2index(index2coords(oldPositionIndex)[0]+int(math.copysign(1, inputGate['inc'])), index2coords(oldPositionIndex)[1])
+        if isCoordsValid((index2coords(oldPositionIndex)[0]) + int(math.copysign(1, inputGate['inc'])), index2coords(oldPositionIndex)[1]):
+            return coords2index(index2coords(oldPositionIndex)[0] + int(math.copysign(1, inputGate['inc'])), index2coords(oldPositionIndex)[1])
         else:
-            return coords2index((index2coords(oldPositionIndex)[0]+int(math.copysign(1, inputGate['inc']))) % 7, index2coords(oldPositionIndex)[1])
+            return coords2index((index2coords(oldPositionIndex)[0] + int(math.copysign(1, inputGate['inc']))) % 7, index2coords(oldPositionIndex)[1])
     if (abs(inputGate['inc']) == 1 and index2coords(inputGate["start"])[0] == index2coords(oldPositionIndex)[0]):
-        if isCoordsValid((index2coords(oldPositionIndex)[0]), index2coords(oldPositionIndex)[1]+int(math.copysign(1, inputGate['inc']))):
-            return coords2index(index2coords(oldPositionIndex)[0], (index2coords(oldPositionIndex)[1])+int(math.copysign(1, inputGate['inc'])))
+        if isCoordsValid((index2coords(oldPositionIndex)[0]), index2coords(oldPositionIndex)[1] + int(math.copysign(1, inputGate['inc']))):
+            return coords2index(index2coords(oldPositionIndex)[0], (index2coords(oldPositionIndex)[1]) + int(math.copysign(1, inputGate['inc'])))
         else:
-            return coords2index(index2coords(oldPositionIndex)[0], (index2coords(oldPositionIndex)[1]+int(math.copysign(1, inputGate['inc']))) % 7)
+            return coords2index(index2coords(oldPositionIndex)[0], (index2coords(oldPositionIndex)[1] + int(math.copysign(1, inputGate['inc']))) % 7)
     return oldPositionIndex
 
 def getTargetPosition(target, board): # trouve la tuile target à partir de son item

@@ -20,7 +20,7 @@ GATES = {
 
 s = socket.socket()
 
-serverAddress = ('localhost', 3000) #adresse du serveur 
+serverAddress = ('172.17.10.59', 3000) #adresse du serveur 
 s.connect(serverAddress)
 
 port = 4444
