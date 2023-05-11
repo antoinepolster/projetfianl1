@@ -25,7 +25,7 @@ s.connect(serverAddress)
 
 port = 4444
 
-name = "test path"
+name = "Antoine"
 matricule = "20090"
 
 data = {
@@ -66,7 +66,7 @@ def send_to_serv(elem, gate, position, message): #envoie ce qu'on veut jouer au 
     print("play")
 
 
-def sendplay(message): 
+def sendplay(message): #gére toute la partie mouvement quand on reçoit une request "play"
     state = message['state']
     erros = message['errors']
     target_item = state['target']
@@ -85,7 +85,7 @@ def sendplay(message):
         old_position_player = positions[1]
 
 
-    def try_gates(board):
+    def try_gates(board): #essaie les 48 possibilités pour trouver un chemin
         tilesset = turn4(freetile)
         i = 0 
         for elem in tilesset:

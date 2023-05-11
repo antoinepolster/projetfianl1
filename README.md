@@ -14,7 +14,7 @@ __math__ : pour certaines opérations mathématiques
 __unittest__ : qui est la bibliothèque qui permet de tester ses fonctions
 
 ## Gestion globale du programme 
-J'ai "séparé" mon programme en 2 : __clienttestpath.py__ et __gridutils.py__ pour pouvoir faire plus facilement mes tests unitaires et pour que ça soit plus facile au niveau méthode de travail
+J'ai divisé mon programme en 2 fichiers: __joueur.py__ et __gridutils.py__ pour pouvoir faire plus facilement mes tests unitaires et pour que ça soit plus facile au niveau méthode de travail
 
 ## Gestion de la relation client-serveur
 Mon client ouvre un premier scket qu'il utilise pour se connecter au serveur. Une fois que c'est fait il le ferme directement.

@@ -2,7 +2,7 @@ import copy
 import math
 from collections import deque
 
-name = "test path"
+name = "Antoine"
 
 GATES = {
     "A": {"start": 1, "end": 43, "inc": 7},
@@ -76,7 +76,6 @@ def index2coords(index):
 
 def isCoordsValid(i, j): #vérifie que la coordonnée est bien dans le plateau de jeu
     return i >= 0 and i < 7 and j >= 0 and j < 7
-# attention parler de cette fonction le j etait un i avant modif
 
 def coords2index(i, j):
     return i * 7 + j
